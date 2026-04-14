@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="workspace">
+  <form class="panel compare-grid" method="post" enctype="multipart/form-data">
+    <div class="panel-head">
+      <div>
+        <p class="section-label">Comparison</p>
+        <h1>Two-scenario view</h1>
+      </div>
+      <button class="button primary" type="submit">Compare scenarios</button>
+    </div>
+
+    <div class="columns compare-columns">
+      {% for prefix, scenario in [("a_", left), ("b_", right)] %}
+      <fieldset class="scenario-box">
+        <legend>{{ scenario.label }}</legend>
+        <div class="stack">
+          <label>
+            Label
+            <input type="text" name="{{ prefix }}label" value="{{ scenario.label }}">
+          </label>
+          <label>
+            Mode
+            <select name="{{ prefix }}mode">
+              <option value="generated" {% if scenario.mode == 'generated' %}selected{% endif %}>Generated</option>
+              <option value="fixed" {% if scenario.mode == 'fixed' %}selected{% endif %}>Fixed arrivals</option>
+            </select>
+          </label>
+          <label>
+            Seed
+            <input type="text" name="{{ prefix }}seed" value="{{ scenario.seed }}">
+          </label>
+          <label>
+            Restaurant config file
+            <input type="file" name="{{ prefix }}restaurant_file" accept=".txt,.csv,text/plain">
+          </label>
+          <textarea name="{{ prefix }}restaurant_text" rows="8">{{ scenario.restaurant_text }}</textarea>
+          <label>
+            Arrivals file
+            <input type="file" name="{{ prefix }}arrivals_file" accept=".txt,.csv,text/plain">
+          </label>
+          <textarea name="{{ prefix }}arrivals_text" rows="8">{{ scenario.arrivals_text }}</textarea>
+        </div>
+      </fieldset>
+      {% endfor %}
+    </div>
+  </form>
+</section>
+
+{% if fallback_notice %}
+<section class="notice">{{ fallback_notice }}</section>
+{% endif %}
+
+{% if comparison %}
+<section class="results">
+  <div class="summary-line">
+    <div>
+      <p class="section-label">Outcome</p>
+      <h2>{{ comparison.left.label }} vs {{ comparison.right.label }}</h2>
+    </div>
+  </div>
+
+  <div class="compare-summary">
+    <section class="compare-side">
+      <h3>{{ comparison.left.label }}</h3>
+      <dl>
+        {% for key, value in comparison.left.metrics.items() %}
+        <div><dt>{{ key }}</dt><dd>{{ value }}</dd></div>
+        {% endfor %}
+      </dl>
+    </section>
+    <section class="compare-side">
+      <h3>{{ comparison.right.label }}</h3>
+      <dl>
+        {% for key, value in comparison.right.metrics.items() %}
+        <div><dt>{{ key }}</dt><dd>{{ value }}</dd></div>
+        {% endfor %}
+      </dl>
+    </section>
+  </div>
+
+  <section class="chart-block compare-chart">
+    <h3>Key metric delta</h3>
+    <canvas data-chart='{{ {"labels": comparison.chart.labels, "datasets": [{"label": comparison.left.label, "data": comparison.chart.left, "borderColor": "#9a5b2b", "backgroundColor": "rgba(154, 91, 43, 0.12)"}, {"label": comparison.right.label, "data": comparison.chart.right, "borderColor": "#2f5d50", "backgroundColor": "rgba(47, 93, 80, 0.12)"}]} | tojson }}'></canvas>
+  </section>
+
+  <section class="list-block">
+    <h3>Metric deltas</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>{{ comparison.left.label }}</th>
+          <th>{{ comparison.right.label }}</th>
+          <th>Delta</th>
+          <th>%</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in comparison.delta_metrics %}
+        <tr>
+          <td>{{ row.metric }}</td>
+          <td>{{ row.left }}</td>
+          <td>{{ row.right }}</td>
+          <td>{{ row.delta }}</td>
+          <td>{{ row.percent }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</section>
+{% endif %}
+{% endblock %}

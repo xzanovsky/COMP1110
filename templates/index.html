@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="intro">
+  <div class="intro-copy">
+    <p class="section-label">Workspace</p>
+    <h1>Run one restaurant scenario or compare two side by side.</h1>
+    <p class="lede">
+      This frontend keeps the simulation surface server-rendered and lightweight while the backend core evolves separately.
+      It accepts raw text, pasted configs, and uploaded `.txt` files.
+    </p>
+  </div>
+  <div class="intro-actions">
+    <a class="button primary" href="{{ url_for('run') }}">Run a scenario</a>
+    <a class="button secondary" href="{{ url_for('compare') }}">Compare scenarios</a>
+  </div>
+</section>
+
+<section class="details">
+  <article class="rail">
+    <p class="section-label">Inputs</p>
+    <h2>Manual config and file upload</h2>
+    <p>Paste restaurant settings, upload `.txt` files, or keep the sample payloads while you wire backend parsing.</p>
+  </article>
+  <article class="rail">
+    <p class="section-label">Outputs</p>
+    <h2>Single-run results and deltas</h2>
+    <p>Display metrics, queue trends, and a comparison summary without moving away from the server-rendered flow.</p>
+  </article>
+</section>
+{% endblock %}

@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="workspace">
+  <form class="panel form-grid" method="post" enctype="multipart/form-data" data-scenario-form>
+    <div class="panel-head">
+      <div>
+        <p class="section-label">Single run</p>
+        <h1>{{ page_title }}</h1>
+      </div>
+      <div class="segmented">
+        <label><input type="radio" name="mode" value="generated" {% if scenario.mode == 'generated' %}checked{% endif %} data-mode-toggle> Generated</label>
+        <label><input type="radio" name="mode" value="fixed" {% if scenario.mode == 'fixed' %}checked{% endif %} data-mode-toggle> Fixed arrivals</label>
+      </div>
+    </div>
+
+    <div class="columns">
+      <div class="stack">
+        <label>
+          Scenario label
+          <input type="text" name="label" value="{{ scenario.label }}" placeholder="Scenario A">
+        </label>
+        <label>
+          Seed
+          <input type="text" name="seed" value="{{ scenario.seed }}" placeholder="2026">
+        </label>
+        <label>
+          Notes
+          <textarea name="notes" rows="3" placeholder="Optional context or assumptions.">{{ scenario.notes }}</textarea>
+        </label>
+      </div>
+
+      <div class="stack">
+        <label>
+          Restaurant config file
+          <input type="file" name="restaurant_file" accept=".txt,.csv,text/plain">
+        </label>
+        <textarea name="restaurant_text" rows="10" placeholder="Paste restaurant.txt content here">{{ scenario.restaurant_text }}</textarea>
+      </div>
+    </div>
+
+    <div class="columns">
+      <div class="stack">
+        <label>
+          Arrivals file
+          <input type="file" name="arrivals_file" accept=".txt,.csv,text/plain">
+        </label>
+        <textarea name="arrivals_text" rows="10" placeholder="Paste arrivals.txt content here">{{ scenario.arrivals_text }}</textarea>
+      </div>
+
+      <aside class="hint">
+        <h2>Contract</h2>
+        <p>The frontend sends raw text to the backend adapter. If no backend runner is available yet, a deterministic demo result is shown so the UI remains useful.</p>
+        <button class="button primary" type="submit">Run simulation</button>
+      </aside>
+    </div>
+  </form>
+</section>
+
+{% if fallback_notice %}
+<section class="notice">{{ fallback_notice }}</section>
+{% endif %}
+
+{% if result %}
+<section class="results">
+  <div class="summary-line">
+    <div>
+      <p class="section-label">Results</p>
+      <h2>{{ result.label }} - {{ result.status|capitalize }}</h2>
+    </div>
+    <div class="summary-meta">
+      <span>{{ result.metrics["Average wait"] }}</span>
+      <span>{{ result.metrics["Groups served"] }} served</span>
+      <span>{{ result.metrics["Table utilisation"] }} utilisation</span>
+    </div>
+  </div>
+
+  <div class="metrics-grid">
+    {% for key, value in result.metrics.items() %}
+      <div class="metric">
+        <span>{{ key }}</span>
+        <strong>{{ value }}</strong>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="chart-row">
+    <section class="chart-block">
+      <h3>Queue trend</h3>
+      <canvas data-chart='{{ {"labels": result.series.get("labels", []), "datasets": [{"label": "Queue length", "data": result.series.get("queue", []), "borderColor": "#9a5b2b", "backgroundColor": "rgba(154, 91, 43, 0.12)", "tension": 0.35}]} | tojson }}'></canvas>
+    </section>
+    <section class="chart-block">
+      <h3>Wait time trend</h3>
+      <canvas data-chart='{{ {"labels": result.series.get("labels", []), "datasets": [{"label": "Wait", "data": result.series.get("wait", []), "borderColor": "#2f5d50", "backgroundColor": "rgba(47, 93, 80, 0.12)", "tension": 0.35}]} | tojson }}'></canvas>
+    </section>
+  </div>
+
+  <section class="list-block">
+    <h3>Queue events</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Minute</th>
+          <th>Arrivals</th>
+          <th>Seated</th>
+          <th>Waiting</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in result.timeline %}
+        <tr>
+          <td>{{ row.minute }}</td>
+          <td>{{ row.arrivals }}</td>
+          <td>{{ row.seated }}</td>
+          <td>{{ row.waiting }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  {% if result.tables %}
+  <section class="list-block">
+    <h3>Table utilisation</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Table</th>
+          <th>Utilisation</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in result.tables %}
+        <tr>
+          <td>{{ row.table }}</td>
+          <td>{{ row.utilisation }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+  {% endif %}
+</section>
+{% endif %}
+{% endblock %}

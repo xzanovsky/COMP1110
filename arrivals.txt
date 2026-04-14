@@ -1,0 +1,9 @@
+group_id,arrival_time,size,service_duration
+G1,0,2,35
+G2,4,4,55
+G3,5,1,22
+G4,7,3,40
+G5,10,5,70
+G6,12,2,30
+G7,20,6,80
+G8,28,4,50
