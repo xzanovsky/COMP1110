@@ -282,8 +282,14 @@ dd {
 }
 
 .chart-block canvas {
+  display: block;
   width: 100%;
-  min-height: 220px;
+  height: 240px !important;
+  min-height: 0;
+}
+
+.compare-chart canvas {
+  height: 280px !important;
 }
 
 .list-block table {
