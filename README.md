@@ -70,17 +70,35 @@ G2,4,4,55
 
 ## Running Locally
 
-Install Python 3.11+ first, then:
+Install Python 3.11+ first, then clone the repository and enter the project folder:
 
 ```powershell
-python -m venv .venv
-.venv\Scripts\Activate.ps1
+git clone https://github.com/xzanovsky/COMP1110.git
+cd COMP1110
+```
+
+If the submitted code is on the `restaraunt-view` branch, switch to it:
+
+```powershell
+git checkout restaraunt-view
+```
+
+Install dependencies and run the tests:
+
+```powershell
 pip install -r requirements.txt
 python -m unittest discover -s tests
+```
+
+Start the Flask website:
+
+```powershell
 python main.py
 ```
 
 Open `http://127.0.0.1:5000/` for the landing page, `/run` for a single scenario, and `/compare` for side-by-side comparison.
+
+If the `python` command is not available, try `python3` instead.
 
 ## Simulation Scenarios
 
