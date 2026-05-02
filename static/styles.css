@@ -305,6 +305,12 @@ dd {
   z-index: 1;
 }
 
+.table-note {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
 th, td {
   text-align: left;
   padding: 0.55rem 0.35rem;

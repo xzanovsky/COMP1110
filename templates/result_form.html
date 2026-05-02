@@ -96,6 +96,9 @@
 
   <section class="list-block">
     <h3>Queue events</h3>
+    {% if result.timeline|length > 80 %}
+      <p class="table-note">Showing first 80 of {{ result.timeline|length }} recorded minutes to keep the page responsive.</p>
+    {% endif %}
     <table>
       <thead>
         <tr>
@@ -106,7 +109,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for row in result.timeline %}
+        {% for row in result.timeline[:80] %}
         <tr>
           <td>{{ row.minute }}</td>
           <td>{{ row.arrivals }}</td>
