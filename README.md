@@ -24,6 +24,7 @@ A Flask-based COMP1110 project that simulates restaurant queueing, seating, dini
 - `static/` - CSS and browser-side JavaScript
 - `tests/` - unit and integration tests
 - `notebooks/` - notebook deliverable
+- `simulation_scenarios/` - ready-to-paste scenario documents for website testing and report case studies
 
 ## Input Format
 
@@ -80,6 +81,20 @@ python main.py
 ```
 
 Open `http://127.0.0.1:5000/` for the landing page, `/run` for a single scenario, and `/compare` for side-by-side comparison.
+
+## Simulation Scenarios
+
+The `simulation_scenarios/` folder contains ten prepared scenario documents. Each file explains what the scenario tests and includes text blocks that can be pasted directly into the website.
+
+Use them like this:
+
+1. Open a scenario file, for example `simulation_scenarios/01_baseline_normal_day.md`.
+2. Copy the `Restaurant config file` block into the website's restaurant config text area.
+3. If the scenario includes an `Arrivals file` block, copy it into the arrivals text area.
+4. Choose the mode shown in the scenario document, such as `Generated` or `Fixed arrivals`.
+5. Run the simulation on `/run`, or compare two scenarios on `/compare`.
+
+These scenarios are also used as case-study inputs for the final report. They cover baseline demand, lunch rush, slow dining, more small tables, more large tables, fixed-arrival reproducibility, large-group pressure, queue-band experiments, service-level targets, and an improved configuration proposal.
 
 ## Notebook
 
